@@ -28,7 +28,7 @@ class Twig extends Foundation implements ResponseInterface
     {
 
         // Check that Twig is loaded
-        if (!class_exists("Twig_Environment")) {
+        if (!class_exists('Twig\Loader\FilesystemLoader')) {
             throw new ResponseConfigException("Twig is not installed, Response class cannot be used.");
         }
 
@@ -62,7 +62,7 @@ class Twig extends Foundation implements ResponseInterface
             }
 
             // Initialize Twig
-            $this->context->getProject()->config->twig = new \Twig_Environment(new \Twig_Loader_Filesystem($this->viewDir), [
+            $this->context->getProject()->config->twig = new \Twig\Environment(new \Twig\Loader\FilesystemLoader($this->viewDir), [
                 'cache' => $this->viewDir . '/cache',
                 'debug' => $this->debug
             ]);
