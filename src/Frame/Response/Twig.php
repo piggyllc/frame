@@ -71,11 +71,11 @@ class Twig extends Foundation implements ResponseInterface
 
         // Ensure Twig has support for custom functions
         $this->context->getProject()->config->twig->addFunction(
-            new \Twig_SimpleFunction('urlFor', [$this, 'urlFor'])
+            new \Twig\TwigFunction('urlFor', [$this, 'urlFor'])
         );
         if ($this->context->getProject()->debugMode) {
             $this->context->getProject()->config->twig->addFunction(
-                new \Twig_SimpleFunction('dump', 'var_dump')
+                new \Twig\TwigFunction('dump', 'var_dump')
             );
         }
         // Set a few global parameters
