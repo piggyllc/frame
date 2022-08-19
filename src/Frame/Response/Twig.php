@@ -16,6 +16,11 @@ namespace Frame\Response;
 
 use Frame\Core\Context;
 use Frame\Response\Exception\ResponseConfigException;
+use Twig\{
+    Loader\FilesystemLoader,
+    Environment,
+    TwigFunction
+};
 
 class Twig extends Foundation implements ResponseInterface
 {
@@ -28,7 +33,7 @@ class Twig extends Foundation implements ResponseInterface
     {
 
         // Check that Twig is loaded
-        if (!class_exists("Twig_Environment")) {
+        if (!class_exists(FilesystemLoader::class)) {
             throw new ResponseConfigException("Twig is not installed, Response class cannot be used.");
         }
 
@@ -62,7 +67,7 @@ class Twig extends Foundation implements ResponseInterface
             }
 
             // Initialize Twig
-            $this->context->getProject()->config->twig = new \Twig_Environment(new \Twig_Loader_Filesystem($this->viewDir), [
+            $this->context->getProject()->config->twig = new Environment(new FilesystemLoader($this->viewDir), [
                 'cache' => $this->viewDir . '/cache',
                 'debug' => $this->debug
             ]);
@@ -71,11 +76,11 @@ class Twig extends Foundation implements ResponseInterface
 
         // Ensure Twig has support for custom functions
         $this->context->getProject()->config->twig->addFunction(
-            new \Twig_SimpleFunction('urlFor', [$this, 'urlFor'])
+            new TwigFunction('urlFor', [$this, 'urlFor'])
         );
         if ($this->context->getProject()->debugMode) {
             $this->context->getProject()->config->twig->addFunction(
-                new \Twig_SimpleFunction('dump', 'var_dump')
+                new TwigFunction('dump', 'var_dump')
             );
         }
         // Set a few global parameters
